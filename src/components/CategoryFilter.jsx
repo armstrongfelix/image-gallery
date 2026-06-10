@@ -1,4 +1,4 @@
-import { categories } from "../data/images";
+const categories = ["all", "nature", "city", "food", "people"];
 
 export default function CategoryFilter({ selected, onSelect }) {
   return (

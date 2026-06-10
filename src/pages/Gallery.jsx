@@ -1,15 +1,17 @@
-import { useState, useMemo } from "react";
-import images from "../data/images";
+import { useState, useMemo, useEffect } from "react";
+import useImageStore from "../store/imageStore";
 import GalleryGrid from "../components/GalleryGrid";
 import SearchBar from "../components/SearchBar";
 import CategoryFilter from "../components/CategoryFilter";
 
-const PAGE_SIZE = 12;
-
 export default function Gallery() {
+  const { images, loading, error, fetchImages } = useImageStore();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
-  const [visible, setVisible] = useState(PAGE_SIZE);
+
+  useEffect(() => {
+    fetchImages();
+  }, [fetchImages]);
 
   const filtered = useMemo(() => {
     return images.filter((img) => {
@@ -19,10 +21,7 @@ export default function Gallery() {
       const matchesCategory = category === "all" || img.category === category;
       return matchesSearch && matchesCategory;
     });
-  }, [search, category]);
-
-  const paginated = filtered.slice(0, visible);
-  const hasMore = visible < filtered.length;
+  }, [search, category, images]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
@@ -36,18 +35,20 @@ export default function Gallery() {
         <CategoryFilter selected={category} onSelect={setCategory} />
       </div>
 
-      <GalleryGrid images={paginated} />
-
-      {hasMore && (
-        <div className="text-center mt-8 sm:mt-10">
-          <button
-            onClick={() => setVisible((prev) => prev + PAGE_SIZE)}
-            className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
-          >
-            Show More
-          </button>
+      {loading && (
+        <div className="text-center py-20 text-gray-500">
+          <p className="text-lg">Loading images...</p>
         </div>
       )}
+
+      {error && (
+        <div className="text-center py-20 text-red-500">
+          <p className="text-lg">Error loading images</p>
+          <p className="text-sm mt-1">{error}</p>
+        </div>
+      )}
+
+      {!loading && !error && <GalleryGrid images={filtered} />}
     </div>
   );
 }
