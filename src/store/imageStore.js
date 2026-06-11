@@ -1,10 +1,78 @@
 import { create } from "zustand";
 
 const keywordCategories = {
-  nature: ["mountain", "ocean", "forest", "tree", "water", "sky", "sunset", "sunrise", "beach", "lake", "river", "flower", "nature", "aurora", "landscape", "wave", "cliff", "ice", "snow", "desert"],
-  city: ["city", "urban", "street", "building", "skyline", "bridge", "architecture", "downtown", "subway", "alley", "neon", "skyscraper", "night", "traffic"],
-  food: ["food", "pizza", "burger", "coffee", "salad", "sushi", "pancake", "bread", "smoothie", "steak", "fruit", "meal", "drink", "cooking", "cake", "chocolate"],
-  people: ["people", "person", "man", "woman", "child", "portrait", "dancer", "musician", "artisan", "crowd", "face", "smile", "hands", "street photography"],
+  nature: [
+    "mountain",
+    "ocean",
+    "forest",
+    "tree",
+    "water",
+    "sky",
+    "sunset",
+    "sunrise",
+    "beach",
+    "lake",
+    "river",
+    "flower",
+    "nature",
+    "aurora",
+    "landscape",
+    "wave",
+    "cliff",
+    "ice",
+    "snow",
+    "desert",
+  ],
+  city: [
+    "city",
+    "urban",
+    "street",
+    "building",
+    "skyline",
+    "bridge",
+    "architecture",
+    "downtown",
+    "subway",
+    "alley",
+    "neon",
+    "skyscraper",
+    "night",
+    "traffic",
+  ],
+  food: [
+    "food",
+    "pizza",
+    "burger",
+    "coffee",
+    "salad",
+    "sushi",
+    "pancake",
+    "bread",
+    "smoothie",
+    "steak",
+    "fruit",
+    "meal",
+    "drink",
+    "cooking",
+    "cake",
+    "chocolate",
+  ],
+  people: [
+    "people",
+    "person",
+    "man",
+    "woman",
+    "child",
+    "portrait",
+    "dancer",
+    "musician",
+    "artisan",
+    "crowd",
+    "face",
+    "smile",
+    "hands",
+    "street photography",
+  ],
 };
 
 function deriveCategory(altDescription) {
@@ -16,16 +84,29 @@ function deriveCategory(altDescription) {
   return "all";
 }
 
-const useImageStore = create((set) => ({
+// Notice we added 'get' next to 'set' here
+const useImageStore = create((set, get) => ({
   images: [],
   loading: false,
   error: null,
+  allImages: [],
+  page: 1, // New page state initialized to 1
+
+  // New function to increment the page
+  incrementPage: () => set((state) => ({ page: state.page + 1 })),
+
   fetchImages: async () => {
     set({ loading: true, error: null });
     try {
-      const res = await fetch(import.meta.env.VITE_API_URL);
+      // Get the current page from the store
+      const { page } = get();
+
+      // Append the page to your API URL
+      const res = await fetch(`${import.meta.env.VITE_API_URL}&page=${page}`);
+
       if (!res.ok) throw new Error(`Failed to fetch images (${res.status})`);
       const data = await res.json();
+
       const mapped = data.map((item) => {
         const alt = item.alt_description || "";
         return {
@@ -39,7 +120,12 @@ const useImageStore = create((set) => ({
           user: item.user,
         };
       });
-      set({ images: mapped, loading: false });
+
+      set((state) => ({
+        images: mapped,
+        allImages: [...state.allImages, ...mapped],
+        loading: false,
+      }));
     } catch (err) {
       set({ error: err.message, loading: false });
     }
