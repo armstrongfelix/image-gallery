@@ -57,7 +57,7 @@ export default function Gallery() {
       {/* Added onClick event listener here */}
       <button
         onClick={incrementPage}
-        className="bg-blue-600 hover:bg-blue-400 active:bg-blue-800 text-white font-bold py-2 px-4 rounded"
+        className="bg-blue-600 hover:bg-blue-400 active:bg-blue-800 text-white font-bold py-2 px-4 rounded mt-8"
       >
         Load More
       </button>
