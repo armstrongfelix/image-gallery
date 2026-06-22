@@ -58,13 +58,14 @@ export default function Gallery() {
       <div>
         {!loading ? (
           <button
+            disabled={loading}
             onClick={incrementPage}
             className="bg-blue-600 hover:bg-blue-400 active:bg-blue-800 text-white font-bold py-2 px-4 rounded mt-8"
           >
             Load More
           </button>
         ) : (
-          <p>Loading</p>
+          <p className="w-fit my-4 text-xl font-bold shadow rounded-sm p-4 ">Loading</p>
         )}
       </div>
     </div>
