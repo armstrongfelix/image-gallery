@@ -38,12 +38,12 @@ export default function Gallery() {
         <SearchBar value={search} onChange={setSearch} />
         <CategoryFilter selected={category} onSelect={setCategory} />
       </div>
-
+      {/* 
       {loading && (
         <div className="text-center py-20 text-gray-500">
           <p className="text-lg">Loading images...</p>
         </div>
-      )}
+      )} */}
 
       {error && (
         <div className="text-center py-20 text-red-500">
@@ -52,15 +52,21 @@ export default function Gallery() {
         </div>
       )}
 
-      {!loading && !error && <GalleryGrid allImages={filtered} />}
+      {!error && <GalleryGrid allImages={filtered} />}
 
       {/* Added onClick event listener here */}
-      <button
-        onClick={incrementPage}
-        className="bg-blue-600 hover:bg-blue-400 active:bg-blue-800 text-white font-bold py-2 px-4 rounded mt-8"
-      >
-        Load More
-      </button>
+      <div>
+        {!loading ? (
+          <button
+            onClick={incrementPage}
+            className="bg-blue-600 hover:bg-blue-400 active:bg-blue-800 text-white font-bold py-2 px-4 rounded mt-8"
+          >
+            Load More
+          </button>
+        ) : (
+          <p>Loading</p>
+        )}
+      </div>
     </div>
   );
 }

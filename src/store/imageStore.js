@@ -90,7 +90,7 @@ const useImageStore = create((set, get) => ({
   loading: false,
   error: null,
   allImages: [],
-  page: 1, // New page state initialized to 1
+  page: 1, // New page state initializedd to 1
 
   // New function to increment the page
   incrementPage: () => set((state) => ({ page: state.page + 1 })),
