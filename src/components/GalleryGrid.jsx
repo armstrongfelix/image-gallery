@@ -1,7 +1,10 @@
 import ImageCard from "./ImageCard";
+import useImageStore from "../store/imageStore";
 
 export default function GalleryGrid({ allImages }) {
-  if (allImages.length === 0) {
+  let loading = useImageStore((state) => state.loading);
+
+  if (allImages.length === 0 && !loading) {
     return (
       <div className="text-center py-20 text-gray-500">
         <p className="text-lg">No images found.</p>

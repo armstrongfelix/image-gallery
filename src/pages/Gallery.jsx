@@ -65,7 +65,9 @@ export default function Gallery() {
             Load More
           </button>
         ) : (
-          <p className="w-fit my-4 text-xl font-bold shadow rounded-sm p-4 ">Loading</p>
+          <p className="w-fit my-4 text-xl font-bold shadow rounded-sm p-4 ">
+            Loading
+          </p>
         )}
       </div>
     </div>
